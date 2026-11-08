@@ -1,0 +1,15 @@
+{
+    frankenphp {
+        num_threads 4
+        php_ini upload_max_filesize 16M
+        php_ini post_max_size 20M
+    }
+    order php_server before file_server
+}
+
+# SERVER_NAME comes from the environment (see docker-compose.yml).
+{$SERVER_NAME:http://localhost} {
+    root * /app/public
+    encode gzip
+    php_server
+}

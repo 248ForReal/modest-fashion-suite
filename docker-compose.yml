@@ -1,0 +1,55 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: suite_app
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./src:/app
+      - ./frankenphp/Caddyfile:/etc/frankenphp/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    environment:
+      # "http://localhost" for local dev; a real domain enables automatic HTTPS.
+      SERVER_NAME: ${SERVER_NAME:-http://localhost}
+      FRANKENPHP_CONFIG: /etc/frankenphp/Caddyfile
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - suite_network
+
+  mysql:
+    image: mysql:8.4
+    container_name: suite_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?Set DB_ROOT_PASSWORD in .env}
+      MYSQL_DATABASE: ${DB_DATABASE:-suite_db}
+      MYSQL_USER: ${DB_USERNAME:-suite_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      # Bound to loopback only: Docker bypasses host firewalls such as UFW.
+      - "127.0.0.1:3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - suite_network
+
+volumes:
+  mysql_data:
+  caddy_data:
+  caddy_config:
+
+networks:
+  suite_network:
+    driver: bridge
