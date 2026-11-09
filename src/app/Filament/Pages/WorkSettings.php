@@ -76,6 +76,8 @@ class WorkSettings extends Page
             'work_types'          => 'Jenis Pekerjaan',
             // Manajemen Kerja
             'work_assignments'    => 'Tugas Pekerjaan',
+            // Penggajian
+            'payslips'            => 'Slip Gaji',
             // Pengaturan
             'users'               => 'Pengguna',
             'work_settings'       => 'Setting Pekerjaan',

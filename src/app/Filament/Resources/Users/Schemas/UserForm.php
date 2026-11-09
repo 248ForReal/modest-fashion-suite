@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Users\Schemas;
 
+use App\Models\Payslip;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -34,6 +35,29 @@ class UserForm
                     ->dehydrateStateUsing(fn($state) => filled($state) ? bcrypt($state) : null)
                     ->dehydrated(fn($state) => filled($state))
                     ->label('Password (kosongkan jika tidak diubah)'),
+
+                // Data penggajian: hanya terlihat (dan tersimpan) oleh pengelola slip gaji
+                Select::make('employment_type')
+                    ->label('Tipe kerja (penggajian)')
+                    ->options(['full_time' => 'Full time', 'part_time' => 'Part time'])
+                    ->default('full_time')
+                    ->required()
+                    ->visible(fn () => Payslip::userCanManage(auth()->user())),
+                TextInput::make('bank_name')
+                    ->label('Bank')
+                    ->maxLength(100)
+                    ->visible(fn () => Payslip::userCanManage(auth()->user())),
+                TextInput::make('bank_account')
+                    ->label('No. Rekening')
+                    ->maxLength(50)
+                    ->visible(fn () => Payslip::userCanManage(auth()->user())),
+                TextInput::make('default_allowance')
+                    ->label('Tunjangan default per bulan')
+                    ->numeric()
+                    ->minValue(0)
+                    ->default(0)
+                    ->prefix('Rp')
+                    ->visible(fn () => Payslip::userCanManage(auth()->user())),
             ]);
     }
 }
