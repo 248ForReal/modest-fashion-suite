@@ -110,6 +110,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/profile', fn() => view('profile.index'))->name('profile');
         Route::post('/profile/password', [\App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('profile.password');
 
+        // Slip gaji: karyawan melihat slip final miliknya; pengelola boleh mencetak semua (dicek di controller)
+        Route::get('/slip-gaji', [\App\Http\Controllers\PayslipController::class, 'index'])->name('payslips.index');
+        Route::get('/slip-gaji/cetak', [\App\Http\Controllers\PayslipController::class, 'print'])->name('payslips.print');
+
         // Tugas pekerjaan (magang/siswa/education)
         Route::middleware('can:work.view_own')->group(function () {
             Route::get('/tugas/rekap', [WorkController::class, 'rekap'])->name('work.rekap');
