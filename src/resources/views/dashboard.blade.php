@@ -431,6 +431,23 @@
         </div>
     </div>
 
+    {{-- Menu Penggajian --}}
+    <div>
+        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Penggajian</p>
+        <a href="{{ route('payslips.index') }}"
+            class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex items-center gap-3 hover:shadow-md hover:border-orange-200 transition-all group">
+            <div class="w-11 h-11 rounded-xl bg-orange-50 flex items-center justify-center group-hover:bg-orange-100 transition-colors">
+                <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+            </div>
+            <div>
+                <span class="text-sm font-medium text-gray-700">Slip Gaji</span>
+                <p class="text-xs text-gray-400">Lihat dan cetak slip gaji bulanan</p>
+            </div>
+        </a>
+    </div>
+
 </div>
 
 <script>
