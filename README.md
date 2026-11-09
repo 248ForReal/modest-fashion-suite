@@ -13,6 +13,7 @@ An operations platform for a small garment studio: a public product catalog and 
 
 **Back office (Filament 4)**
 - **Attendance**: GPS-validated clock-in/out, leave requests, monthly recap, XLSX export. Late rules come from one place: a global work start time, an optional late tolerance, and **per-user custom start times**, with the tolerance applied from each person's own start time.
+- **Payroll (payslips)**: monthly slips generated per period from attendance days and approved production work. Meal and pocket money per day (full or part time rates), a performance bonus above a garment-count threshold, absence deductions, and employer-paid insurance shown but excluded from the total. Drafts are editable with live totals, final slips are locked, print-ready A4 layout, and employees see only their own finalized slips.
 - **Work assignments**: work types, assignment and review flow, self-assign limits, cancel requests.
 - **Inventory and products**: garment categories and types, sizes, warehouses, stock per unit, barcode printing and scanning.
 - **Distribution and transaction reports.**
@@ -90,6 +91,7 @@ Change or delete them before exposing an instance to a network.
 
 ## Engineering notes
 
+- **Payroll rules live in one service.** `PayrollCalculator` computes the automatic parts of a payslip, while manual fields survive recalculation and final slips are never touched. Totals are always recomputed on the server from the stored line items, so the browser-side preview cannot change what is saved.
 - **One source of truth for lateness.** `UserWorkSchedule` resolves each user's start time and tolerance; clock-in, the monthly recap, the XLSX export and the dashboard all go through it, so rules cannot drift apart.
 - **Hardened defaults.** The database port is bound to `127.0.0.1` (Docker publishes ports around host firewalls such as UFW), `APP_DEBUG=false` in production, and uploads are validated and size-limited.
 - **No CDN dependency at runtime.** Alpine.js, pdf.js and the QR library are served locally, so the public pages work in restricted networks.
